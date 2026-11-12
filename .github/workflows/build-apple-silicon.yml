@@ -1,0 +1,33 @@
+name: Build Apple Silicon
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    env:
+      TARGET: aarch64-apple-darwin
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: codex/macos-menu-bar
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build and verify the macOS disk image
+        run: scripts/build_macos_app.sh
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: entropy-macos-arm64
+          path: dist/macos/*-macos-arm64.dmg
+          if-no-files-found: error
