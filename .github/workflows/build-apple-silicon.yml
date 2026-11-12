@@ -8,9 +8,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-26
+    runs-on: macos-15-intel
     env:
       TARGET: aarch64-apple-darwin
+      CARGO_PROFILE_RELEASE_LTO: "false"
     steps:
       - uses: actions/checkout@v7
         with:
